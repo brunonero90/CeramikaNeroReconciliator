@@ -9,7 +9,7 @@ import type {
   ReconciliationRow,
   UnknownPayment,
 } from '../types';
-import { accountsMatch } from './normalize';
+import { accountsMatch, normalizeAccountNumber } from './normalize';
 import { combinedNameScore } from './fuzzyMatch';
 
 const STRONG_ACCOUNT_CONFIDENCE = 0.95;
@@ -212,6 +212,19 @@ function matchTransaction(
   const best = candidates[0];
 
   if (ambiguous && best.confidence < STRONG_ACCOUNT_CONFIDENCE) {
+    const accountMatches = findAccountMatches(transaction, payers);
+    if (accountMatches.length === 1) {
+      const match = accountMatches[0];
+      return {
+        transactionId: transaction.id,
+        payerId: match.payerId,
+        confidence: match.confidence,
+        reason: match.reason,
+        isAmbiguous: false,
+        possibleMatches: candidates.slice(0, 5),
+      };
+    }
+
     return {
       transactionId: transaction.id,
       payerId: null,
@@ -254,6 +267,18 @@ function detectDuplicates(transactions: BankTransaction[]): string[] {
     }
   }
   return duplicates;
+}
+
+function canonicalAccountKey(account: string): string {
+  const normalized = normalizeAccountNumber(account);
+  if (!normalized) return '';
+  return normalized.length >= 26 ? normalized.slice(-26) : normalized;
+}
+
+function findPayersForAccount(payers: ExpectedPayer[], account: string): ExpectedPayer[] {
+  return payers.filter(
+    (p) => p.normalizedAccount && accountsMatch(p.normalizedAccount, account),
+  );
 }
 
 function assign(
@@ -354,18 +379,19 @@ export function reconcile(
 
   const byAccount = new Map<string, BankTransaction[]>();
   for (const tx of unassigned) {
-    if (!tx.normalizedAccount) continue;
-    const list = byAccount.get(tx.normalizedAccount) ?? [];
+    const accountKey = canonicalAccountKey(tx.normalizedAccount);
+    if (!accountKey) continue;
+    const list = byAccount.get(accountKey) ?? [];
     list.push(tx);
-    byAccount.set(tx.normalizedAccount, list);
+    byAccount.set(accountKey, list);
   }
 
   const processedTxIds = new Set<string>();
 
   for (const [, accountTxs] of byAccount) {
-    const accountPayers = payers.filter((p) =>
-      p.normalizedAccount &&
-      accountsMatch(p.normalizedAccount, accountTxs[0].normalizedAccount),
+    const accountPayers = findPayersForAccount(
+      payers,
+      accountTxs[0].normalizedAccount,
     );
 
     if (accountPayers.length === 1) {
@@ -416,6 +442,22 @@ export function reconcile(
 
   for (const tx of unassigned) {
     if (processedTxIds.has(tx.id)) continue;
+
+    if (tx.normalizedAccount) {
+      const accountPayers = findPayersForAccount(payers, tx.normalizedAccount);
+      if (accountPayers.length === 1) {
+        assignments.push(
+          assign(
+            tx,
+            accountPayers[0].id,
+            STRONG_ACCOUNT_CONFIDENCE,
+            'Dopasowanie po numerze konta',
+          ),
+        );
+        processedTxIds.add(tx.id);
+        continue;
+      }
+    }
 
     const result = matchTransaction(tx, payers);
 

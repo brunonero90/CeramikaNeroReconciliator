@@ -1,7 +1,7 @@
 import Papa from 'papaparse';
 import Decimal from 'decimal.js';
 import type { BankTransaction } from '../types';
-import { generateId, normalizeAccountNumber, normalizeBankHeader, parseAmount, cleanBankField } from './normalize';
+import { generateId, normalizeAccountNumber, normalizeBankHeader, parseAmount, cleanBankField, sanitizeAccountField } from './normalize';
 
 const DATE_ALIASES = [
   'data operacji',
@@ -240,7 +240,7 @@ export function parseBankCsv(content: string): ParseBankResult {
       return;
     }
 
-    let senderAccount = accountCol ? cleanBankField(row[accountCol] ?? '') : '';
+    let senderAccount = accountCol ? sanitizeAccountField(row[accountCol] ?? '') : '';
     let senderName = senderCol ? cleanBankField(row[senderCol] ?? '') : '';
     let title = titleCol ? cleanBankField(row[titleCol] ?? '') : '';
 

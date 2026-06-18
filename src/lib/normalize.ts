@@ -151,3 +151,7 @@ export function formatAccountDisplay(account: string): string {
 export function cleanBankField(value: string): string {
   return value.trim().replace(/^['"]+|['"]+$/g, '').trim();
 }
+
+export function sanitizeAccountField(value: string): string {
+  return cleanBankField(value).replace(/'/g, '');
+}

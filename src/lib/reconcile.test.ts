@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import Decimal from 'decimal.js';
 import type { BankTransaction, ExpectedPayer } from '../types';
-import { parseBankCsv } from './parseBankCsv';
+import {
+  extractFromMbankDescription,
+  parseBankCsv,
+  stripMbankMetadata,
+} from './parseBankCsv';
 import { reconcile } from './reconcile';
 import { combinedNameScore } from './fuzzyMatch';
 import { generateId } from './normalize';
@@ -45,6 +52,46 @@ describe('parseBankCsv', () => {
     expect(result.transactions).toHaveLength(1);
     expect(result.transactions[0].amount.toFixed(2)).toBe('250.00');
     expect(result.skippedOutgoing).toBe(1);
+  });
+
+  it('parses mBank lista operacji export with metadata header', () => {
+    const listaCsv = `mBank S.A. Bankowość Detaliczna;
+#Data operacji;#Opis operacji;#Rachunek;#Kategoria;#Kwota;
+2026-05-29;"SEARGIN SPÓŁKA, Zapłata za: 11/2026 PRZELEW ZEWNĘTRZNY PRZYCHODZĄCY 93105017641000009031361570";"mBiznes konto Standard 3911 ... 9842";"Wpływy - inne";30 996,00 PLN;
+2026-05-28;"BRUNO NERO, PRZELEW ŚRODKÓW PRZELEW WŁASNY 87114020040000390282652282";"mBiznes konto Standard 3911 ... 9842";"Przelew własny";-3 000,00 PLN;`;
+
+    const result = parseBankCsv(listaCsv);
+    expect(result.errors.filter((e) => e.includes('Nie znaleziono'))).toHaveLength(0);
+    expect(result.transactions).toHaveLength(1);
+    expect(result.skippedOutgoing).toBe(1);
+    expect(result.transactions[0].amount.toFixed(2)).toBe('30996.00');
+    expect(result.transactions[0].senderName).toContain('SEARGIN');
+    expect(result.transactions[0].senderAccount).toBe('93105017641000009031361570');
+  });
+
+  it('extracts counterparty from mBank opis operacji', () => {
+    const extracted = extractFromMbankDescription(
+      'ANNA KOWALSKA, Zajęcia ceramiczne PRZELEW ZEWNĘTRZNY PRZYCHODZĄCY 93105017641000009031361570',
+    );
+    expect(extracted.senderName).toBe('ANNA KOWALSKA');
+    expect(extracted.senderAccount).toBe('93105017641000009031361570');
+  });
+
+  it('parses full real mBank lista operacji export file', () => {
+    const dir = dirname(fileURLToPath(import.meta.url));
+    const content = readFileSync(
+      resolve(dir, '__fixtures__/mbank_lista_operacji.csv'),
+      'utf8',
+    );
+
+    expect(stripMbankMetadata(content).split('\n')[0]).toContain('Data operacji');
+
+    const result = parseBankCsv(content);
+    expect(result.errors.filter((e) => e.includes('Nie znaleziono'))).toHaveLength(0);
+    expect(result.errors.filter((e) => e.includes('Too few fields'))).toHaveLength(0);
+    expect(result.transactions.length).toBeGreaterThanOrEqual(5);
+    expect(result.skippedOutgoing).toBeGreaterThanOrEqual(10);
+    expect(result.transactions[0].senderAccount).toMatch(/^\d{26}$/);
   });
 });
 

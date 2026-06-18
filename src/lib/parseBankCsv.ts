@@ -1,7 +1,7 @@
 import Papa from 'papaparse';
 import Decimal from 'decimal.js';
 import type { BankTransaction } from '../types';
-import { generateId, normalizeAccountNumber, normalizeBankHeader, normalizeHeader, parseAmount, cleanBankField } from './normalize';
+import { generateId, normalizeAccountNumber, normalizeBankHeader, parseAmount, cleanBankField } from './normalize';
 
 const DATE_ALIASES = [
   'data operacji',

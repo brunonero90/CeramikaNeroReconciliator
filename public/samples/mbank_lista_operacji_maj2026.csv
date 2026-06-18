@@ -1,0 +1,54 @@
+﻿mBank S.A. Bankowość Detaliczna;
+		Skrytka Pocztowa 2108;
+		90-959 Łódź 2;
+		www.mBank.pl;
+		mLinia: 801 300 800;
+		+48 (42) 6 300 800;
+		
+
+#Klient;
+NERO CONSULTING  BRUNO NERO;
+
+Lista operacji;
+
+#Za okres:;
+01.05.2026;31.05.2026;
+
+#zgodnie z wybranymi filtrami wyszukiwania;
+      #dla rachunków:;
+      mBiznes konto Standard - 39114020040000380277429842;
+      mBiznes konto walutowe USD - 47114020040000311211919893;
+      mBiznes konto walutowe EUR - 62114020040000361223271676;
+      mBiznes Konto VAT - 64114020040000380300247090;
+      
+      #Lista nie jest dokumentem w rozumieniu art. 7 Ustawy Prawo Bankowe (Dz. U. Nr 140 z 1997 roku, poz.939 z późniejszymi zmianami), ponieważ operacje można samodzielnie edytować.;
+      
+      #Waluta;#Wpływy;#Wydatki;
+PLN;127 863,83;-94 987,80;
+      
+#Data operacji;#Opis operacji;#Rachunek;#Kategoria;#Kwota;
+2026-05-29;"SEARGIN SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ BERNARDA CHRZANOWSKIEGO 11 80-278 GDAŃSK, /NIP/9671362321/Zapłata za: 11/2026  SEARGIN SPÓŁKA Z OGRANICZONĄ       ODPOWIEDZIALNOŚCIĄ                 BERNARDA CHRZANOWSKIEGO 11         80-278 GDAŃSK                       PRZELEW ZEWNĘTRZNY PRZYCHODZĄCY                                                   93105017641000009031361570  ";"mBiznes konto Standard 3911 ... 9842";"Wpływy - inne";30 996,00 PLN;;
+2026-05-28;"BRUNO NERO, PRZELEW ŚRODKÓW  UL.ŁĄKOWA 17                       62-002 SUCHY LAS                    PRZELEW WŁASNY                                                                    87114020040000390282652282  ";"mBiznes konto Standard 3911 ... 9842";"Przelew własny";-3 000,00 PLN;;
+2026-05-28;"OPŁATA PRZELEW ZEW.DOWOL.BIEŻĄCY                ";"mBiznes konto Standard 3911 ... 9842";"Opłaty i odsetki";-1,50 PLN;;
+2026-05-28;"BIURO RACHUNKOWE ANETA MILEWSKA, BRUNO NERO                                                                         PRZELEW ZEWNĘTRZNY WYCHODZĄCY                                                     50124066091111001053080915  ";"mBiznes konto Standard 3911 ... 9842";"Usługi księgowe i doradcze";-184,50 PLN;;
+2026-05-27;"INCHCAPE SHIPPING SERVICES POLAND SP. O.O. UL. ŚWIĘTOJAŃSKA 38/5 81-372 GDYNIA, 19/2026  2 GDYNIA                                                               PRZELEW ZEWNĘTRZNY PRZYCHODZĄCY                                                   13191010482210031494700001  ";"mBiznes konto Standard 3911 ... 9842";"Wpływy - inne";49 200,00 PLN;;
+2026-05-25;"BRUNO NERO, PRZELEW ŚRODKÓW  UL.ŁĄKOWA 17                       62-002 SUCHY LAS                    PRZELEW WŁASNY                                                                    87114020040000390282652282  ";"mBiznes konto Standard 3911 ... 9842";"Przelew własny";-10 000,00 PLN;;
+2026-05-22;"ZUS I ODDZIAŁ W POZNANIU UL. DĄBROWSKIEGO 12 60-908 POZNAŃ, 585 ZWROT NADPŁATY Z ROCZNEGO ROZLICZENIA SKŁADKI NA UB. ZDR.  ZUS I ODDZIAŁ W POZNANIU           UL. DĄBROWSKIEGO 12                60-908 POZNAŃ                                                          PRZELEW ZEWNĘTRZNY PRZYCHODZĄCY                                                   92102055900000010282501010  ";"mBiznes konto Standard 3911 ... 9842";"Wpływy - inne";0,04 PLN;;
+2026-05-13;"URZĄD SKARBOWY, VAT-7                                     CENTRUM ROZLICZENIOWE               PRZELEW PODATKOWY                                                                 34101000712222967136232100  ";"mBiznes konto Standard 3911 ... 9842";"Podatki - inne";-23 548,00 PLN;;
+2026-05-13;"URZĄD SKARBOWY, PPE                                     CENTRUM ROZLICZENIOWE               PRZELEW PODATKOWY                                                                 34101000712222967136232100  ";"mBiznes konto Standard 3911 ... 9842";"Podatki - inne";-12 056,00 PLN;;
+2026-05-13;"URZĄD SKARBOWY, PPE                                     CENTRUM ROZLICZENIOWE               PRZELEW PODATKOWY                                                                 34101000712222967136232100  ";"mBiznes konto Standard 3911 ... 9842";"Podatki - inne";-448,00 PLN;;
+2026-05-13;"OPŁATA PRZELEW ZEW.DOWOL.BIEŻĄCY                ";"mBiznes konto Standard 3911 ... 9842";"Opłaty i odsetki";-1,50 PLN;;
+2026-05-13;"BIURO RACHUNKOWE ANETA MILEWSKA, BRUNO NERO                                                                         PRZELEW ZEWNĘTRZNY WYCHODZĄCY                                                     50124066091111001053080915  ";"mBiznes konto Standard 3911 ... 9842";"Usługi księgowe i doradcze";-307,50 PLN;;
+2026-05-13;"SII SP. Z O.O. ALEJA NIEPODLEGŁOŚCI 69 02-626 WARSZAWA PL, 10/2026  SII SP. Z O.O.                     ALEJA NIEPODLEGŁOŚCI 69            02-626 WARSZAWA PL                                                     PRZELEW WEWNĘTRZNY PRZYCHODZĄCY                                                   69114020620000504349001379  ";"mBiznes konto Standard 3911 ... 9842";"Wpływy - inne";46 494,00 PLN;;
+2026-05-06;"PAYPRO S.A., /OPT/X/////P24-U2A-V1N-Z9B  UL. PASTELOWA 8                    60-198 POZNAŃ                       PRZELEW WEWNĘTRZNY WYCHODZĄCY                                                     07114010100000540270001019  ";"mBiznes konto Standard 3911 ... 9842";"Bez kategorii";-7 011,00 PLN;;
+2026-05-05;"PAYPRO SPÓŁKA AKCYJNA, /OPF/X/////268179113:PRZELEWY24 ZWROT P24-U0A-H3V-F0Z  UL.PASTELOWA 8                     60-198 POZNAŃ                       PRZELEW WEWNĘTRZNY PRZYCHODZĄCY                                                   98114020040000310275557799  ";"mBiznes konto Standard 3911 ... 9842";"Wpływy - inne";1 173,79 PLN;;
+2026-05-05;"BRUNO NERO, PRZELEW ŚRODKÓW  UL.ŁĄKOWA 17                       62-002 SUCHY LAS                    PRZELEW WŁASNY                                                                    87114020040000390282652282  ";"mBiznes konto Standard 3911 ... 9842";"Przelew własny";-4 000,00 PLN;;
+2026-05-05;"ZAKŁAD UBEZPIECZEŃ SPOŁECZNYCH                                                                         PRZELEW ZEWNĘTRZNY DO ZUS                                                         50600000020260019671362321  ";"mBiznes konto Standard 3911 ... 9842";"Ubezpieczenia";-3 421,80 PLN;;
+2026-05-05;"OPŁATA PRZELEW ZEW.ZDEF.BIEŻĄCY                ";"mBiznes konto Standard 3911 ... 9842";"Opłaty i odsetki";-1,50 PLN;;
+2026-05-05;"BRUNO NERO ALIOR BANK, PRZELEW ŚRODKÓW  UL.ŁĄKOWA 17                       62-002 SUCHY LAS                    PRZELEW ZEWNĘTRZNY WYCHODZĄCY                                                     16249000050000400068701361  ";"mBiznes konto Standard 3911 ... 9842";"Nieistotne - inne";-1 000,00 PLN;;
+2026-05-05;"OPŁATA PRZELEW ZEW.DOWOL.BIEŻĄCY                ";"mBiznes konto Standard 3911 ... 9842";"Opłaty i odsetki";-1,50 PLN;;
+2026-05-05;"BRUNO PKO, PRZELEW ŚRODKÓW                                                                         PRZELEW ZEWNĘTRZNY WYCHODZĄCY                                                     03102040270000160220032910  ";"mBiznes konto Standard 3911 ... 9842";"Bez kategorii";-20 000,00 PLN;;
+2026-05-05;"BRUNO NERO, PRZELEW ŚRODKÓW  UL.ŁĄKOWA 17                       62-002 SUCHY LAS                    PRZELEW WŁASNY                                                                    87114020040000390282652282  ";"mBiznes konto Standard 3911 ... 9842";"Przelew własny";-10 000,00 PLN;;
+2026-05-04;"OPŁATA ZA KARTĘ                ";"mBiznes konto Standard 3911 ... 9842";"Opłaty i odsetki";-5,00 PLN;;
+
+

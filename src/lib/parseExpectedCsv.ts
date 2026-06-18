@@ -50,17 +50,40 @@ export interface ParseExpectedResult {
   errors: string[];
 }
 
+function detectDelimiter(content: string): string {
+  const firstLine =
+    content
+      .replace(/^\uFEFF/, '')
+      .split(/\r\n|\r|\n/)
+      .find((line) => line.trim()) ?? '';
+  const semicolons = (firstLine.match(/;/g) ?? []).length;
+  const commas = (firstLine.match(/,/g) ?? []).length;
+  return semicolons > commas ? ';' : ',';
+}
+
+function isIgnorableParseError(message: string): boolean {
+  return (
+    message.includes('Too few fields') ||
+    message.includes('Too many fields') ||
+    message.includes('FieldMismatch')
+  );
+}
+
 export function parseExpectedCsv(content: string): ParseExpectedResult {
   const errors: string[] = [];
+  const delimiter = detectDelimiter(content);
 
-  const parsed = Papa.parse<Record<string, string>>(content, {
+  const parsed = Papa.parse<Record<string, string>>(content.replace(/^\uFEFF/, ''), {
     header: true,
-    skipEmptyLines: true,
+    skipEmptyLines: 'greedy',
+    delimiter,
+    quoteChar: '"',
     transformHeader: (h) => h.trim(),
   });
 
-  if (parsed.errors.length > 0) {
-    errors.push(...parsed.errors.map((e) => `CSV: ${e.message}`));
+  const meaningfulErrors = parsed.errors.filter((e) => !isIgnorableParseError(e.message));
+  if (meaningfulErrors.length > 0) {
+    errors.push(...meaningfulErrors.map((e) => `CSV: ${e.message}`));
   }
 
   const headers = parsed.meta.fields ?? [];

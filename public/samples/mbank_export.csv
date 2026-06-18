@@ -1,0 +1,10 @@
+#Data operacji;#Opis operacji;#Tytuł;#Nadawca/Odbiorca;#Numer rachunku kontrahenta;#Kwota;#Waluta
+2025-06-03;Przelew przychodzący;Zajęcia ceramiczne Zofia;ANNA KOWALSKA;PL12 1020 1026 0000 0102 0123 4567;250,00;PLN
+2025-06-04;Przelew przychodzący;Czesne czerwiec;PIOTR NOWAK;61 1090 1014 0000 0712 3456 7890;250,00;PLN
+2025-06-05;Przelew przychodzący;Zajęcia Maja i Tomasz;EWA WISNIEWSKA;PL44 1140 2004 0000 3002 3456 7890;400,00;PLN
+2025-06-06;Przelew przychodzący;Ceramika Lena;MARTA ZIELINSKA;26 1240 6960 1111 0010 5678 9012;250,00;PLN
+2025-06-07;Przelew przychodzący;Zajęcia ceramiczne cz.1;ROBERT MALINOWSKI;12 1050 0099 1234 5678 9012 3456;150,00;PLN
+2025-06-08;Przelew przychodzący;Zajęcia ceramiczne cz.2;ROBERT MALINOWSKI;12 1050 0099 1234 5678 9012 3456;100,00;PLN
+2025-06-09;Przelew przychodzący;Zajęcia;NIKOŁAJ BARSZCZ;99 9999 9999 9999 9999 9999 9999;250,00;PLN
+2025-06-10;Przelew wychodzący;Wypłata gotówki;BANKOMAT;-250,00;PLN
+2025-06-11;Przelew przychodzący;Zwrot nadpłaty;ANNA KOWALSKA;PL12 1020 1026 0000 0102 0123 4567;-50,00;PLN

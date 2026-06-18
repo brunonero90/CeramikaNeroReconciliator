@@ -1,11 +1,17 @@
 student_name,parent_name,account_number,expected_amount,lesson_group,notes
-Julia Ceramika,SEARGIN Sp. z o.o.,93 1050 1764 1000 0090 3136 1570,30996.00,Test — wpływ 2026-05-29,Konto z przelewu SEARGIN (30996 zl)
-Mikołaj Inchcape,INCHCAPE SHIPPING SERVICES,13 1910 1048 2210 0314 9470 0001,49200.00,Test — wpływ 2026-05-27,Konto z przelewu INCHCAPE (49200 zl)
-Zosia Sii,SII Sp. z o.o.,69 1140 2062 0000 5043 4900 1379,46494.00,Test — wpływ 2026-05-13,Konto z przelewu SII (46494 zl)
-Antoni Paypro,PAYPRO Spółka Akcyjna,98 1140 2004 0000 3102 7555 7799,1173.79,Test — wpływ 2026-05-05,Konto z zwrotu PAYPRO (1173.79 zl)
-Hania Zus,ZUS Poznań (zwrot),92 1020 5590 0000 0102 8250 1010,0.04,Test — wpływ 2026-05-22,Mikro-kwota — test dopasowania konta
-Lena Kowalska,Anna Kowalska,PL12 1020 1026 0000 0102 0123 4567,250.00,Grupa A (pon 16:00),Brak wpływu w maju — test MISSING
-Jan Nowak,Piotr Nowak,61 1090 1014 0000 0712 3456 7890,250.00,Grupa A (pon 16:00),Brak wpływu w maju — test MISSING
-Maja Wiśniewska,Ewa Wiśniewska,PL44 1140 2004 0000 3002 3456 7890,200.00,Grupa B (śr 17:00),Brak wpływu — test MISSING (wspolne konto rodzenstwa)
-Tomasz Wiśniewski,Ewa Wiśniewska,PL44 1140 2004 0000 3002 3456 7890,200.00,Grupa C (pt 15:00),Brak wpływu — wspolne konto rodzenstwa
-Kacper Księgowy,Aneta Milewska Biuro Rachunkowe,50 1240 6609 1111 0010 5308 0915,250.00,Grupa B (śr 17:00),Konto tylko na wyplacie w maju — test MISSING
+Aleksandra Skrobańska,Kamila Skrobańska,20 1140 2004 0000 3302 6517 1957,340.00,Rysunek wtorek 17:15,Wplata 2026-05-03
+Rozalia Kozłowska,Piotr Kozłowski,63 1140 2004 0000 3602 0553 1265,360.00,Ceramika poniedzialek,2 przelewy po 360 w maju - test nadplata
+Jagna Grzmiel,Anna Sierszeńska-Grzmiel,27 1140 2004 0000 3902 4081 3770,360.00,Ceramika pon 11+,Wplata 2026-05-03
+Martyna Kołodziejska,Jarosław Kołodziejski,34 1140 2017 0000 4902 0533 6344,700.00,Rysunek i ceramika 11+,Wplata 2026-05-04
+Laura Łukaszczyk,Łukasz Łukaszczyk,48 1090 1320 0000 0000 3212 0465,340.00,Ceramika,Wplata 2026-05-04
+Wiktoria Kozak,Beata Klemińska-Kozak,19 1160 2202 0000 0003 8631 0043,340.00,Rysunek malarstwo ceramika,Wplata 2026-05-04
+Julia Sowińska,Katarzyna Sowińska,84 1240 3767 1111 0010 9087 3495,360.00,Kurs ceramiki 11+,Wplata 2026-05-04
+Kornelia Mielcarska,Dominik Mielcarski,87 1140 2004 0000 3102 6627 6649,340.00,Rysunek malarstwo ceramika,Wplata 2026-05-05
+Wiktoria Majchrzak,Anna Sroka-Majchrzak,30 1140 2004 0000 3602 7104 4980,340.00,Rysunek wtorek 17:15,Wplata 2026-05-05
+Hanna Kolasińska,Dominik Kolasiński,33 1090 1362 0000 0001 2100 8737,360.00,Ceramika poniedzialek,Wplata 2026-05-05
+Pola Łęcka,Dorota Łęcka,72 2490 1044 0000 4200 9440 1753,360.00,Ceramika,Wplata 2026-05-05
+Leonard Muhlenbernd,Karolina Muhlenbernd-Niewiadowska,07 2490 0005 0000 4000 1203 1213,315.00,Wtorek 16:15 rysunek rzezba,Wplata 2026-05-06
+Maja Możarowska,Celestyna Możarowska,07 1090 1711 0000 0000 7003 4146,340.00,Ceramika wtorek 17:15,Wplata 2026-05-08
+Zosia Czaczyk,Dominika Malinowska-Czaczyk,12 1090 1463 0000 0001 0619 7452,340.00,Zajecia artystyczne,Wplata 2026-05-12
+Kostiantyn Oborin,Nataliia Oborina,66 1050 1520 1000 0097 5095 5776,340.00,Ceramika Suchy Las,Wplata 2026-05-15
+Blanka Pawełczak,Patryk Pawełczak,09 1600 1462 1846 5975 7000 0001,890.00,Polkolonie 31.06-04.07,Wplata 2026-05-28

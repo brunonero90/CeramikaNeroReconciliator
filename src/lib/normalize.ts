@@ -111,3 +111,43 @@ export function normalizeHeader(header: string): string {
     .replace(/\s+/g, ' ')
     .replace(/[()]/g, '');
 }
+
+export function repairMbankEncoding(text: string): string {
+  return text
+    .replace(/ê/g, 'e')
+    .replace(/Ê/g, 'E')
+    .replace(/¹/g, 'a')
+    .replace(/³/g, 'l')
+    .replace(/£/g, 'L')
+    .replace(/Ÿ/g, 'z')
+    .replace(/¿/g, 'z')
+    .replace(/ñ/g, 'n')
+    .replace(/Ñ/g, 'N')
+    .replace(/¥/g, 'y')
+    .replace(/ô/g, 'o')
+    .replace(/Ó/g, 'O')
+    .replace(/ó/g, 'o')
+    .replace(/ê/g, 'e');
+}
+
+export function normalizeBankHeader(header: string): string {
+  return normalizeHeader(repairMbankEncoding(header));
+}
+
+export function formatAccountDisplay(account: string): string {
+  const digits = account.replace(/\D/g, '').slice(-26);
+  if (digits.length < 26) return account.trim();
+  return [
+    digits.slice(0, 2),
+    digits.slice(2, 6),
+    digits.slice(6, 10),
+    digits.slice(10, 14),
+    digits.slice(14, 18),
+    digits.slice(18, 22),
+    digits.slice(22, 26),
+  ].join(' ');
+}
+
+export function cleanBankField(value: string): string {
+  return value.trim().replace(/^['"]+|['"]+$/g, '').trim();
+}

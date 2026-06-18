@@ -1,7 +1,7 @@
 import Papa from 'papaparse';
 import Decimal from 'decimal.js';
 import type { BankTransaction } from '../types';
-import { generateId, normalizeAccountNumber, normalizeHeader, parseAmount } from './normalize';
+import { generateId, normalizeAccountNumber, normalizeBankHeader, normalizeHeader, parseAmount, cleanBankField } from './normalize';
 
 const DATE_ALIASES = [
   'data operacji',
@@ -45,10 +45,11 @@ const AMOUNT_ALIASES = [
 const CURRENCY_ALIASES = ['waluta', 'currency', 'waluta operacji'];
 
 function headerMatchesAlias(header: string, alias: string): boolean {
-  const nh = normalizeHeader(header);
-  const na = normalizeHeader(alias);
+  const nh = normalizeBankHeader(header);
+  const na = normalizeBankHeader(alias);
   if (!nh || !na) return false;
   if (nh === na) return true;
+  if (na.startsWith('tytu') && nh.startsWith('tytu')) return true;
   if (na.length >= 5 && nh.includes(na)) return true;
   return false;
 }
@@ -68,8 +69,11 @@ function findColumn(headers: string[], aliases: string[]): string | null {
 function findCounterpartyAccountColumn(headers: string[]): string | null {
   for (const header of headers) {
     if (!header?.trim()) continue;
-    const nh = normalizeHeader(header);
+    const nh = normalizeBankHeader(header);
     if (
+      nh === 'numer konta' ||
+      nh.includes('numer konta') ||
+      nh.includes('nr konta') ||
       nh.includes('kontrahent') ||
       nh.includes('nadawcy') ||
       nh.includes('zleceniodawcy') ||
@@ -80,7 +84,7 @@ function findCounterpartyAccountColumn(headers: string[]): string | null {
   }
   for (const header of headers) {
     if (!header?.trim()) continue;
-    const nh = normalizeHeader(header);
+    const nh = normalizeBankHeader(header);
     if (nh.includes('iban') || nh === 'account' || nh === 'account number') {
       return header;
     }
@@ -104,7 +108,7 @@ function isTransactionHeaderLine(line: string): boolean {
 
   const cells = trimmed
     .split(';')
-    .map((cell) => normalizeHeader(cell.trim()))
+    .map((cell) => normalizeBankHeader(cell.trim()))
     .filter(Boolean);
 
   const hasDate = cells.some(
@@ -206,9 +210,11 @@ export function parseBankCsv(content: string): ParseBankResult {
   const titleCol = findColumn(headers, TITLE_ALIASES);
   const amountCol = findColumn(headers, AMOUNT_ALIASES);
   const currencyCol = findColumn(headers, CURRENCY_ALIASES);
-  const descriptionCol = titleCol;
+  const descriptionCol = findColumn(headers, ['opis operacji', ...TITLE_ALIASES]);
   const useMbankDescription =
-    descriptionCol && normalizeHeader(descriptionCol).includes('opis operacji');
+    !accountCol &&
+    descriptionCol &&
+    normalizeBankHeader(descriptionCol).includes('opis operacji');
 
   if (!dateCol) errors.push('Nie znaleziono kolumny z datą transakcji.');
   if (!amountCol) errors.push('Nie znaleziono kolumny z kwotą.');
@@ -234,11 +240,16 @@ export function parseBankCsv(content: string): ParseBankResult {
       return;
     }
 
-    let senderAccount = accountCol ? (row[accountCol] ?? '').trim() : '';
-    let senderName = senderCol ? (row[senderCol] ?? '').trim() : '';
-    let title = titleCol ? (row[titleCol] ?? '').trim() : '';
+    let senderAccount = accountCol ? cleanBankField(row[accountCol] ?? '') : '';
+    let senderName = senderCol ? cleanBankField(row[senderCol] ?? '') : '';
+    let title = titleCol ? cleanBankField(row[titleCol] ?? '') : '';
 
-    if (useMbankDescription && descriptionCol) {
+    if ((!senderAccount || !senderName) && descriptionCol) {
+      const extracted = extractFromMbankDescription(row[descriptionCol] ?? '');
+      if (!senderAccount) senderAccount = extracted.senderAccount;
+      if (!senderName) senderName = extracted.senderName;
+      if (!title) title = extracted.title;
+    } else if (useMbankDescription && descriptionCol) {
       const extracted = extractFromMbankDescription(row[descriptionCol] ?? '');
       if (!senderAccount) senderAccount = extracted.senderAccount;
       if (!senderName) senderName = extracted.senderName;

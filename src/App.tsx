@@ -110,8 +110,8 @@ export default function App() {
 
   const loadSamples = useCallback(async () => {
     const [expectedRes, bankRes] = await Promise.all([
-      fetch('/samples/expected_payments.csv'),
-      fetch('/samples/mbank_export.csv'),
+      fetch('/samples/expected_payments_mbank_maj2026.csv'),
+      fetch('/samples/ceramika_nero_mbank_maj2026.csv'),
     ]);
     const expectedContent = await expectedRes.text();
     const bankContent = await bankRes.text();
@@ -121,9 +121,9 @@ export default function App() {
 
     setPayers(expectedParsed.payers);
     setTransactions(bankParsed.transactions);
-    setExpectedFileName('expected_payments.csv (przykład)');
-    setBankFileName('mbank_export.csv (przykład)');
-    setMonthLabel('czerwiec 2025');
+    setExpectedFileName('expected_payments_mbank_maj2026.csv (przykład)');
+    setBankFileName('ceramika_nero_mbank_maj2026.csv (przykład)');
+    setMonthLabel('maj 2026');
     setErrors([]);
   }, []);
 

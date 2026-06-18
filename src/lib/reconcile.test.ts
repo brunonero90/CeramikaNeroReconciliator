@@ -93,6 +93,21 @@ describe('parseBankCsv', () => {
     expect(result.skippedOutgoing).toBeGreaterThanOrEqual(10);
     expect(result.transactions[0].senderAccount).toMatch(/^\d{26}$/);
   });
+
+  it('parses Ceramika Nero zestawienie operacji export', () => {
+    const dir = dirname(fileURLToPath(import.meta.url));
+    const content = readFileSync(
+      resolve(dir, '__fixtures__/ceramika_nero_mbank_maj2026.csv'),
+      'utf8',
+    );
+
+    const result = parseBankCsv(content);
+    expect(result.errors.filter((e) => e.includes('Nie znaleziono'))).toHaveLength(0);
+    expect(result.transactions.length).toBeGreaterThanOrEqual(20);
+    expect(result.transactions[0].senderAccount).toMatch(/^\d{26}$/);
+    expect(result.transactions[0].senderName.length).toBeGreaterThan(0);
+    expect(result.transactions[0].title.length).toBeGreaterThan(0);
+  });
 });
 
 describe('reconcile', () => {

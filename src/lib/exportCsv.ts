@@ -1,4 +1,4 @@
-import type { ReconciliationRow } from '../types';
+import type { ExpectedPayer, ReconciliationRow } from '../types';
 import { formatMoneyPlain } from './normalize';
 
 function escapeCsvField(value: string): string {
@@ -10,6 +10,31 @@ function escapeCsvField(value: string): string {
 
 function rowToCsvLine(fields: string[]): string {
   return fields.map(escapeCsvField).join(';');
+}
+
+export function exportExpectedPayersCsv(payers: ExpectedPayer[]): string {
+  const headers = [
+    'student_name',
+    'parent_name',
+    'account_number',
+    'expected_amount',
+    'lesson_group',
+    'notes',
+  ];
+  const lines = [rowToCsvLine(headers)];
+  for (const p of payers) {
+    lines.push(
+      rowToCsvLine([
+        p.studentName,
+        p.parentName,
+        p.accountNumber,
+        formatMoneyPlain(p.expectedAmount),
+        p.lessonGroup,
+        p.notes,
+      ]),
+    );
+  }
+  return lines.join('\n');
 }
 
 export function exportFullReconciliationCsv(rows: ReconciliationRow[]): string {

@@ -6,6 +6,7 @@ import type {
   PaymentStatus,
   ReconciliationResult,
 } from './types';
+import ExpectedPayersPanel from './components/ExpectedPayersPanel';
 import { parseBankCsv } from './lib/parseBankCsv';
 import { parseExpectedCsv } from './lib/parseExpectedCsv';
 import { reconcile } from './lib/reconcile';
@@ -17,6 +18,13 @@ import {
   markPayerPaid,
   saveCorrections,
 } from './lib/corrections';
+import {
+  clearExpectedPayers,
+  fromStored,
+  loadExpectedPayers,
+  mergeImportedPayers,
+  saveExpectedPayers,
+} from './lib/expectedPayersStorage';
 import {
   copyToClipboard,
   downloadCsv,
@@ -62,6 +70,7 @@ function readFileAsText(file: File): Promise<string> {
 
 export default function App() {
   const [payers, setPayers] = useState<ExpectedPayer[]>([]);
+  const [payersSavedAt, setPayersSavedAt] = useState<string | null>(null);
   const [transactions, setTransactions] = useState<BankTransaction[]>([]);
   const [corrections, setCorrections] = useState<ManualCorrection>(loadCorrections);
   const [errors, setErrors] = useState<string[]>([]);
@@ -70,25 +79,71 @@ export default function App() {
   const [expectedFileName, setExpectedFileName] = useState('');
   const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
   const [filter, setFilter] = useState<PaymentStatus | 'ALL'>('ALL');
+  const [payersReady, setPayersReady] = useState(false);
+
+  useEffect(() => {
+    const stored = loadExpectedPayers();
+    if (stored) {
+      setPayers(stored.payers.map(fromStored));
+      setPayersSavedAt(stored.savedAt);
+      setExpectedFileName(stored.sourceFileName ?? '');
+    }
+    setPayersReady(true);
+  }, []);
 
   useEffect(() => {
     saveCorrections(corrections);
   }, [corrections]);
+
+  const persistPayers = useCallback((next: ExpectedPayer[], fileName?: string) => {
+    setPayers(next);
+    if (next.length > 0) {
+      saveExpectedPayers(next, fileName);
+      setPayersSavedAt(new Date().toISOString());
+    }
+    if (fileName !== undefined) setExpectedFileName(fileName);
+  }, []);
 
   const result: ReconciliationResult | null = useMemo(() => {
     if (payers.length === 0) return null;
     return reconcile(payers, transactions, corrections);
   }, [payers, transactions, corrections]);
 
-  const handleExpectedUpload = useCallback(async (file: File) => {
-    const content = await readFileAsText(file);
-    const parsed = parseExpectedCsv(content);
-    setExpectedFileName(file.name);
-    setPayers(parsed.payers);
-    setErrors((prev) => [
-      ...prev.filter((e) => !e.startsWith('Oczekiwane')),
-      ...parsed.errors.map((e) => `Oczekiwane: ${e}`),
-    ]);
+  const handleExpectedUpload = useCallback(
+    async (file: File) => {
+      const content = await readFileAsText(file);
+      const parsed = parseExpectedCsv(content);
+      const importErrors = parsed.errors.map((e) => `Oczekiwane: ${e}`);
+
+      if (parsed.payers.length === 0) {
+        setErrors((prev) => [
+          ...prev.filter((e) => !e.startsWith('Oczekiwane')),
+          ...importErrors,
+        ]);
+        return;
+      }
+
+      const replace = payers.length === 0 || confirm(
+        'Zastąpić zapisaną listę uczniów nowym plikiem CSV? Istniejące wpisy zostaną zaktualizowane po koncie i nazwisku.',
+      );
+
+      if (!replace && payers.length > 0) return;
+
+      const merged = mergeImportedPayers(payers, parsed.payers);
+      persistPayers(merged, file.name);
+      setErrors((prev) => [
+        ...prev.filter((e) => !e.startsWith('Oczekiwane')),
+        ...importErrors,
+      ]);
+    },
+    [payers, persistPayers],
+  );
+
+  const handleClearPayers = useCallback(() => {
+    clearExpectedPayers();
+    setPayers([]);
+    setPayersSavedAt(null);
+    setExpectedFileName('');
   }, []);
 
   const handleBankUpload = useCallback(async (file: File) => {
@@ -120,6 +175,8 @@ export default function App() {
     const bankParsed = parseBankCsv(bankContent);
 
     setPayers(expectedParsed.payers);
+    saveExpectedPayers(expectedParsed.payers, 'expected_payments_mbank_maj2026.csv (przykład)');
+    setPayersSavedAt(new Date().toISOString());
     setTransactions(bankParsed.transactions);
     setExpectedFileName('expected_payments_mbank_maj2026.csv (przykład)');
     setBankFileName('ceramika_nero_mbank_maj2026.csv (przykład)');
@@ -172,29 +229,25 @@ export default function App() {
       </header>
 
       <main className="mx-auto max-w-7xl space-y-6 px-4 py-6">
+        <ExpectedPayersPanel
+          payers={payers}
+          savedAt={payersSavedAt}
+          sourceFileName={expectedFileName}
+          onChange={persistPayers}
+          onImportCsv={(file) => void handleExpectedUpload(file)}
+          onClear={handleClearPayers}
+        />
+
         <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold text-slate-800">
-            Wgraj pliki
+          <h2 className="mb-1 text-lg font-semibold text-slate-800">
+            Rozliczenie miesiąca
           </h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">
-                Lista oczekiwanych płatności (CSV)
-              </label>
-              <input
-                type="file"
-                accept=".csv,text/csv"
-                className="block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-slate-100 file:px-4 file:py-2 file:text-sm file:font-medium file:text-slate-700 hover:file:bg-slate-200"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) void handleExpectedUpload(file);
-                }}
-              />
-              {expectedFileName && (
-                <p className="mt-1 text-xs text-slate-500">{expectedFileName}</p>
-              )}
-            </div>
-            <div>
+          <p className="mb-4 text-sm text-slate-600">
+            Wgraj eksport mBank za wybrany miesiąc. Lista uczniów jest już zapisana
+            lokalnie.
+          </p>
+          <div className="flex flex-wrap items-end gap-4">
+            <div className="min-w-[240px] flex-1">
               <label className="mb-1 block text-sm font-medium text-slate-700">
                 Eksport mBank (CSV)
               </label>
@@ -211,25 +264,25 @@ export default function App() {
                 <p className="mt-1 text-xs text-slate-500">{bankFileName}</p>
               )}
             </div>
-          </div>
-          <div className="mt-4 flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={() => void loadSamples()}
-              className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-            >
-              Wczytaj przykładowe pliki
-            </button>
             <div>
-              <label className="mr-2 text-sm text-slate-600">Miesiąc:</label>
+              <label className="mb-1 block text-sm font-medium text-slate-700">
+                Miesiąc
+              </label>
               <input
                 type="text"
-                placeholder="np. czerwiec 2025"
+                placeholder="np. maj 2026"
                 value={monthLabel}
                 onChange={(e) => setMonthLabel(e.target.value)}
                 className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm"
               />
             </div>
+            <button
+              type="button"
+              onClick={() => void loadSamples()}
+              className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              Wczytaj przykład
+            </button>
           </div>
         </section>
 
@@ -488,10 +541,20 @@ export default function App() {
           </>
         )}
 
-        {payers.length === 0 && (
-          <section className="rounded-xl border border-dashed border-slate-300 bg-white p-12 text-center">
+        {payers.length === 0 && payersReady && (
+          <section className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center">
             <p className="text-slate-600">
-              Wgraj pliki CSV lub wczytaj przykładowe dane, aby rozpocząć rozliczenie.
+              Zacznij od wgrania listy uczniów (CSV) powyżej — zostanie zapisana w
+              przeglądarce na cały rok. Potem co miesiąc wystarczy eksport mBank.
+            </p>
+          </section>
+        )}
+
+        {payers.length > 0 && transactions.length === 0 && (
+          <section className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center">
+            <p className="text-slate-600">
+              Lista {payers.length} uczniów jest zapisana. Wgraj eksport mBank, aby
+              zobaczyć rozliczenie.
             </p>
           </section>
         )}
